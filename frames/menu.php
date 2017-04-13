@@ -142,7 +142,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		function reloadtree() {
 			var elm = $('buildText');
 			if(elm) {
-				elm.innerHTML = "<img src='<?php echo $_style['icons_loading_doc_tree']?>' width='16' height='16' />&nbsp;<?php echo $_lang['loading_doc_tree']?>";
+				elm.innerHTML = '<img src="<?php echo $_style['icons_loading_doc_tree']?>" width="16" height="16" />&nbsp;<?php echo $_lang['loading_doc_tree']?>';
 				elm.style.display = 'block';
 			}
 			top.tree.saveFolderState(); // save folder state
@@ -153,7 +153,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 			<?php if($manager_layout == 0) { ?>
 			var elm = $('buildText');
 			if(elm) {
-				elm.innerHTML = "<img src='<?php echo $_style['icons_working']?>' width='16' height='16' />&nbsp;<?php echo $_lang['loading_menu']?>";
+				elm.innerHTML = '<img src="<?php echo $_style['icons_working']?>" width="16" height="16" />&nbsp;<?php echo $_lang['loading_menu']?>';
 				elm.style.display = 'block';
 			}
 			parent.mainMenu.location.reload();
@@ -180,7 +180,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		// These functions are used for showing the user the system is working
 		function work() {
 			var elm = $('workText');
-			if(elm) elm.innerHTML = "<img src='<?php echo $_style['icons_working']?>' width='16' height='16' />&nbsp;<?php echo $_lang['working']?>";
+			if(elm) elm.innerHTML = '<img src="<?php echo $_style['icons_working']?>" width="16" height="16" />&nbsp;<?php echo $_lang['working']?>';
 			else w = window.setTimeout('work()', 50);
 		}
 
@@ -362,6 +362,13 @@ if(is_array($evtOut)) {
 <script>
 	jQuery(document).ready(function() {
 		var dropdown = jQuery(parent.document).find('.dropdown');
+
+		jQuery(parent.document).find('#hideMenu').click(function() {
+			toggleTreeFrame()
+		});
+
+		stopWork();
+		parent.scrollWork();
 
 		// Event click
 //		jQuery('.dropdown-toggle').click(function() {
