@@ -47,7 +47,7 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 			#resizer #hideMenu { position: absolute; z-index: 9; left: -12px; top: 5px; width: 24px; height: 24px; line-height: 24px; font-size: 20px; text-align: right; text-indent: -2px; cursor: pointer; content: "\f054" }
 			.tree-open #resizer #hideMenu { text-align: center }
 			.tree-open #resizer #hideMenu i::before { content: "\f053" }
-			#resizer2 #hideTopMenu { display: block; margin-top: -4px; margin-left: px; cursor: pointer; background: transparent url('media/style/<?php echo $modx->config['manager_theme'];
+			#resizer2 #hideTopMenu { display: block; margin-top: -4px; margin-left: 0; cursor: pointer; background: transparent url('media/style/<?php echo $modx->config['manager_theme'];
  ?>/images/icons/application_get.png') !important;
 				width: 16px; height: 16px; }
 		</style>
