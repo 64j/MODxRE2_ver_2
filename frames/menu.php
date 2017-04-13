@@ -71,9 +71,9 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 			parent.document.getElementById('resizer').style.left = pos + 'px';
 			parent.document.getElementById('main').style.left = pos + 'px';
 			if(pos > 0) {
-				parent.document.getElementById('frameset').classList.add('tree-open');
+				parent.document.getElementById('frameset').classList.add('tree-show');
 			} else {
-				parent.document.getElementById('frameset').classList.remove('tree-open');
+				parent.document.getElementById('frameset').classList.remove('tree-show');
 			}
 		}
 
