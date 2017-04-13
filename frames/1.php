@@ -39,19 +39,19 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 </head>
 <body id="frameset" class="tree-open">
 <div id="resizer">
-	<a id="hideMenu" onClick="mainMenu.toggleTreeFrame();">
+	<a id="hideMenu">
 		<i class="fa fa-chevron-right"></i>
 	</a>
 </div>
 <!--<div id="resizer2"> <a id="hideTopMenu" onClick="mainMenu.toggleMenuFrame();"></a> </div>-->
 <div id="mainMenu">
-	<iframe name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0" noresize="noresize"></iframe>
+	<iframe name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0"></iframe>
 </div>
 <div id="tree">
-	<iframe name="tree" src="index.php?a=1&amp;f=tree" scrolling="no" frameborder="0" onresize="mainMenu.resizeTree();"></iframe>
+	<iframe name="tree" src="index.php?a=1&amp;f=tree" scrolling="no" frameborder="0"></iframe>
 </div>
 <div id="main">
-	<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="if (document.mainMenu.stopWork()) document.mainMenu.stopWork(); scrollWork();"></iframe>
+	<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0"></iframe>
 </div>
 <div class="dropdown"></div>
 <script language="JavaScript" type="text/javascript">
@@ -96,21 +96,21 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 	}
 
 	function OnMouseMove(e) {
-		if(e == null) var e = window.event;
+		if(e == null) e = window.event;
 		_dragElement.style.left = e.clientX + 'px';
 		_dragElement.style.top = _startY + 'px';
 		document.getElementById('tree').style.width = e.clientX + 'px';
 		document.getElementById('main').style.left = e.clientX + 'px'
 	}
 
-	function OnMouseUp(e) {
+	function OnMouseUp() {
 		if(_dragElement != null) {
 			_dragElement.style.zIndex = _oldZIndex;
 			_dragElement.style.background = 'transparent';
 			_dragElement.ondragstart = null;
 			_dragElement = null;
 			document.onmousemove = null;
-			document.onselectstart = null
+			document.onselectstart = null;
 			document.body.removeChild(mask);
 		}
 	}
