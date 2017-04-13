@@ -74,10 +74,10 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 #tree { width: 320px; top: 48px; left: 0; bottom: 0; overflow: hidden; }
 #main { top: 48px; left: 320px; right: 0; bottom: 0; }
 #resizer { position: absolute; top: 48px; bottom: 0; left: 320px; width: 12px; cursor: col-resize; z-index: 999 }
-.resizer-move #resizer::before { position: absolute; left: 0; top: 0; bottom: 0; width: 5px; content: ""; background-color: #444 }
+.resizer-move #resizer::before, .tree-hide #resizer::before { position: absolute; left: 0; top: 0; bottom: 0; width: 5px; content: ""; background-color: #444 }
 #resizer #hideMenu { position: absolute; z-index: 9; left: -12px; top: 5px; width: 24px; height: 24px; line-height: 24px; font-size: 20px; text-align: right; text-indent: -2px; cursor: pointer; content: "\f054" }
-.tree-open #resizer #hideMenu { text-align: center }
-.tree-open #resizer #hideMenu i::before { content: "\f053" }
+.tree-show #resizer #hideMenu { text-align: center }
+.tree-show #resizer #hideMenu i::before { content: "\f053" }
 #resizer2 #hideTopMenu { display: block; margin-top: -4px; margin-left: 0px; cursor: pointer; width: 16px; height: 16px; }
 /* -------------------------[ Topbar ]--- */
 .dropdown-menu { display: none }
