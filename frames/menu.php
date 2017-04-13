@@ -373,6 +373,7 @@ if(is_array($evtOut)) {
 				jQuery(parent.document.body).addClass('tree-show').removeClass('tree-hide');
 				pos = 320
 			}
+			jQuery(parent.document.body).removeClass('resizer-move');
 			jQuery('#tree', jQuery(parent.document)).css({
 				width: pos
 			});
@@ -419,7 +420,7 @@ if(is_array($evtOut)) {
 				if(parseInt(pos.x) > 0) {
 					jQuery(parent.document.body).removeClass('resizer-move').addClass('tree-show').removeClass('tree-hide')
 				} else {
-					jQuery(parent.document.body).addClass('resizer-move').removeClass('tree-show').addClass('tree-hide')
+					jQuery(parent.document.body).removeClass('resizer-move').removeClass('tree-show').addClass('tree-hide')
 				}
 			});
 
