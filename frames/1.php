@@ -37,7 +37,7 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 		#main, #resizer { left: <?php echo $modx->config['manager_tree_width'] ?>px }
 	</style>
 </head>
-<body id="frameset" class="tree-open">
+<body id="frameset" class="tree-show">
 <div id="resizer">
 	<a id="hideMenu">
 		<i class="fa fa-chevron-right"></i>
