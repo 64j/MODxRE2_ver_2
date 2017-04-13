@@ -365,9 +365,9 @@ if(is_array($evtOut)) {
 		jQuery('#hideMenu', jQuery(parent.document)).click(function() {
 			var pos = 0;
 			if(jQuery('#tree', jQuery(parent.document)).width()) {
-				jQuery(parent.document.body).removeClass('tree-open').addClass('resizer-move');
+				jQuery(parent.document.body).removeClass('tree-show').addClass('tree-hide');
 			} else {
-				jQuery(parent.document.body).addClass('tree-open').removeClass('resizer-move');
+				jQuery(parent.document.body).addClass('tree-show').removeClass('tree-hide');
 				pos = 320
 			}
 			jQuery('#tree', jQuery(parent.document)).css({
@@ -384,19 +384,18 @@ if(is_array($evtOut)) {
 		// resizer
 		jQuery(parent.document).on('mousedown touchstart', '#resizer', function(e) {
 			var pos = {};
-
-			pos.x = e.originalEvent.touches ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
+			pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
 
 			jQuery(parent.document.body).addClass('resizer-move');
 
 			jQuery(parent.document).on('mousemove touchmove', function(e) {
-				pos.x = e.originalEvent.touches ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
+				pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length  ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
 
 				if(parseInt(pos.x) > 0) {
-					jQuery(parent.document.body).addClass('tree-open')
+					jQuery(parent.document.body).addClass('tree-show').removeClass('tree-hide')
 				} else {
 					pos.x = 0;
-					jQuery(parent.document.body).removeClass('tree-open').addClass('resizer-move')
+					jQuery(parent.document.body).removeClass('tree-show').addClass('resizer-move')
 				}
 
 				jQuery('#tree', jQuery(parent.document)).css({
@@ -408,12 +407,19 @@ if(is_array($evtOut)) {
 			});
 
 			jQuery(parent.document).one('mouseup touchend', function(e) {
-				pos.x = e.originalEvent.touches ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
+				if(typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length) {
+					pos.x = e.originalEvent.touches[0].clientX
+				} else if(typeof e.originalEvent.changedTouches != 'undefined' && e.originalEvent.changedTouches.length) {
+					pos.x = e.originalEvent.changedTouches[0].clientX
+				} else {
+					pos.x = e.clientX
+				}
+
 				jQuery(parent.document).off('mousemove touchmove');
 				if(parseInt(pos.x) > 0) {
-					jQuery(parent.document.body).removeClass('resizer-move')
+					jQuery(parent.document.body).removeClass('resizer-move').addClass('tree-show').removeClass('tree-hide')
 				} else {
-					jQuery(parent.document.body).addClass('resizer-move')
+					jQuery(parent.document.body).addClass('resizer-move').removeClass('tree-show').addClass('tree-hide')
 				}
 			});
 
