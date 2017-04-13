@@ -89,7 +89,7 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 				_oldZIndex = _dragElement.style.zIndex;
 				_dragElement.style.zIndex = 10000;
 				_dragElement.style.background = '#444';
-                document.body.appendChild(mask);
+				document.body.appendChild(mask);
 				document.onmousemove = OnMouseMove;
 				document.body.focus();
 				document.onselectstart = function() {
