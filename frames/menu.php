@@ -360,15 +360,68 @@ if(is_array($evtOut)) {
 </div>
 <div id="menuSplitter"></div>
 <script>
-	jQuery(document).ready(function() {
-		var dropdown = jQuery(parent.document).find('.dropdown');
+	jQuery(function() {
 
-		jQuery(parent.document).find('#hideMenu').click(function() {
-			toggleTreeFrame()
+		jQuery('#hideMenu', jQuery(parent.document)).click(function() {
+			var pos = 0;
+			if(jQuery('#tree', jQuery(parent.document)).width()) {
+				jQuery(parent.document.body).removeClass('tree-open').addClass('resizer-move');
+			} else {
+				jQuery(parent.document.body).addClass('tree-open').removeClass('resizer-move');
+				pos = 320
+			}
+			jQuery('#tree', jQuery(parent.document)).css({
+				width: pos
+			});
+			jQuery('#resizer, #main', jQuery(parent.document)).css({
+				left: pos
+			});
 		});
 
 		stopWork();
 		parent.scrollWork();
+
+		// resizer
+		jQuery(parent.document).on('mousedown touchstart', '#resizer', function(e) {
+			var pos = {};
+
+			pos.x = e.originalEvent.touches ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
+
+			jQuery(parent.document.body).addClass('resizer-move');
+
+			jQuery(parent.document).on('mousemove touchmove', function(e) {
+				pos.x = e.originalEvent.touches ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
+
+				if(parseInt(pos.x) > 0) {
+					jQuery(parent.document.body).addClass('tree-open')
+				} else {
+					pos.x = 0;
+					jQuery(parent.document.body).removeClass('tree-open').addClass('resizer-move')
+				}
+
+				jQuery('#tree', jQuery(parent.document)).css({
+					width: pos.x
+				});
+				jQuery('#resizer, #main', jQuery(parent.document)).css({
+					left: pos.x
+				});
+			});
+
+			jQuery(parent.document).one('mouseup touchend', function(e) {
+				pos.x = e.originalEvent.touches ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
+				jQuery(parent.document).off('mousemove touchmove');
+				if(parseInt(pos.x) > 0) {
+					jQuery(parent.document.body).removeClass('resizer-move')
+				} else {
+					jQuery(parent.document.body).addClass('resizer-move')
+				}
+			});
+
+		});
+
+		// dropdown mainMenu
+
+		var dropdown = jQuery(parent.document).find('.dropdown');
 
 		// Event click
 //		jQuery('.dropdown-toggle').click(function() {
