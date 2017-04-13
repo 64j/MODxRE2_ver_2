@@ -362,6 +362,9 @@ if(is_array($evtOut)) {
 <script>
 	jQuery(function() {
 
+		stopWork();
+		parent.scrollWork();
+
 		jQuery('#hideMenu', jQuery(parent.document)).click(function() {
 			var pos = 0;
 			if(jQuery('#tree', jQuery(parent.document)).width()) {
@@ -377,9 +380,6 @@ if(is_array($evtOut)) {
 				left: pos
 			});
 		});
-
-		stopWork();
-		parent.scrollWork();
 
 		// resizer
 		jQuery(parent.document).on('mousedown touchstart', '#resizer', function(e) {
