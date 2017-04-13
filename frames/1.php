@@ -1,4 +1,5 @@
 <?php
+
 if(IN_MANAGER_MODE != "true") {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 }
@@ -21,6 +22,7 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 } else {
 	$initMainframeAction = 2; // welcome.static
 }
+
 ?>
 <!DOCTYPE html>
 <html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"'; ?>>
@@ -32,9 +34,7 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
 	<style>
 		#tree { width: <?php echo $modx->config['manager_tree_width'] ?>px }
-		#main { left: <?php echo $modx->config['manager_tree_width'] ?>px }
-		#resizer { left: <?php echo $modx->config['manager_tree_width'] ?>px }
-		#resizer2 #hideTopMenu { background: transparent url('media/style/<?php echo $modx->config['manager_theme'] ?>/images/icons/application_get.png') !important }
+		#main, #resizer { left: <?php echo $modx->config['manager_tree_width'] ?>px }
 	</style>
 </head>
 <body id="frameset" class="tree-open">
@@ -43,7 +43,6 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 		<i class="fa fa-chevron-right"></i>
 	</a>
 </div>
-<!--<div id="resizer2"> <a id="hideTopMenu" onClick="mainMenu.toggleMenuFrame();"></a> </div>-->
 <div id="mainMenu">
 	<iframe name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0"></iframe>
 </div>
@@ -54,66 +53,8 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 	<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0"></iframe>
 </div>
 <div class="dropdown"></div>
-<script language="JavaScript" type="text/javascript">
-	var _startY = 48;
-	var _dragElement;
-	var _oldZIndex = 999;
-	var _left;
-	var mask = document.createElement('div');
-	mask.id = 'mask_resizer';
-	mask.style.zIndex = _oldZIndex;
 
-	InitDragDrop();
-
-	function InitDragDrop() {
-		document.getElementById('resizer').onmousedown = OnMouseDown;
-		document.getElementById('resizer').onmouseup = OnMouseUp
-	}
-
-	function OnMouseDown(e) {
-		if(e == null) e = window.event;
-		_dragElement = e.target != null ? e.target : e.srcElement;
-		if((e.button == 1 && window.event != null || e.button == 0) && _dragElement.id == 'resizer') {
-			_oldZIndex = _dragElement.style.zIndex;
-			_dragElement.style.zIndex = 10000;
-			_dragElement.style.background = '#444';
-			document.body.appendChild(mask);
-			document.onmousemove = OnMouseMove;
-			document.body.focus();
-			document.onselectstart = function() {
-				return false
-			};
-			_dragElement.ondragstart = function() {
-				return false
-			};
-			return false
-		}
-	}
-
-	function ExtractNumber(value) {
-		var n = parseInt(value);
-		return n == null || isNaN(n) ? 0 : n
-	}
-
-	function OnMouseMove(e) {
-		if(e == null) e = window.event;
-		_dragElement.style.left = e.clientX + 'px';
-		_dragElement.style.top = _startY + 'px';
-		document.getElementById('tree').style.width = e.clientX + 'px';
-		document.getElementById('main').style.left = e.clientX + 'px'
-	}
-
-	function OnMouseUp() {
-		if(_dragElement != null) {
-			_dragElement.style.zIndex = _oldZIndex;
-			_dragElement.style.background = 'transparent';
-			_dragElement.ondragstart = null;
-			_dragElement = null;
-			document.onmousemove = null;
-			document.onselectstart = null;
-			document.body.removeChild(mask);
-		}
-	}
+<script type="text/javascript">
 
 	//save scrollPosition
 	function getQueryVariable(variable, query) {
@@ -148,7 +89,13 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 				localStorage.setItem('page_url', frm.location.search.substring(1));
 			}
 		}
+
+		function ExtractNumber(value) {
+			var n = parseInt(value);
+			return n == null || isNaN(n) ? 0 : n
+		}
 	}
+
 </script>
 <?php
 $modx->invokeEvent('OnManagerFrameLoader', array('action' => $action));
