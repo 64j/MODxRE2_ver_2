@@ -582,7 +582,7 @@ if(is_array($evtOut)) {
 			e.preventDefault();
 			jQuery(this).next('.fa').remove();
 
-			if(jQuery(this).val() !== '') {
+			if(this.value.length !== '' && this.value.length > 2) {
 				var url = 'index.php?a=71&ajax=1';
 				var params = {
 					searchid: jQuery(this).val(),
