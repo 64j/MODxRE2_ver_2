@@ -28,7 +28,6 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 <html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"'; ?>>
 <head>
 	<title><?php echo $site_name ?>- (MODX CMS Manager)</title>
-	<meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.0, initial-scale=0.8">
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset ?>" />
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
@@ -50,12 +49,21 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 	<iframe name="tree" src="index.php?a=1&amp;f=tree" scrolling="no" frameborder="0"></iframe>
 </div>
 <div id="main">
-	<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0"></iframe>
+	<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="if (mainMenu.stopWork()) mainMenu.stopWork(); scrollWork();"></iframe>
 </div>
 <div class="dropdown"></div>
+<div id="searchresult"></div>
 
 <script type="text/javascript">
 
+	var reloadmenu = function() {
+		mainMenu.reloadmenu()
+	};
+	
+	mainMenu.reloadtree = function() {
+		mainMenu.reloadtree()
+	};
+	
 	//save scrollPosition
 	function getQueryVariable(variable, query) {
 		var vars = query.split('&');
