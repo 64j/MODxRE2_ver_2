@@ -446,7 +446,7 @@ if(is_array($evtOut)) {
 			});
 		});
 		// Event
-		
+
 		// modx Search
 		var searchresult = jQuery(parent.document).find('#searchresult');
 		var searchresultWidth = 400/*(jQuery(this).outerWidth() - jQuery('#searchform').offset().left)*/;
