@@ -265,12 +265,12 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 #frameset #searchresult { position: absolute; z-index: 98; overflow: auto; top: 48px; right: 0; bottom: 0; width: 0; margin-right: -100%; transition: margin-right 0.3s; background-color: #fcfcfc; box-shadow: 0 0 60px rgba(0, 0, 0, 0.15); border-left: 1px solid rgba(0, 0, 0, 0.1); box-sizing: border-box; }
 #frameset #searchresult.open { margin-right: 0 !important }
 #frameset #searchresult .ajaxSearchResults ul, #frameset #searchresult .ajaxSearchResults li { margin: 0; padding: 0; list-style: none }
-#frameset #searchresult .ajaxSearchResults b, #frameset #searchresult .ajaxSearchResults strong, #frameset #searchresult .ajaxSearchResults a { display: block; background-color: #3d5456; color: #fff; padding: 5px 10px; margin-top: -1px; border-top: 1px solid rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.03); box-sizing: border-box }
-#frameset #searchresult .ajaxSearchResults a { color: #3697CD; padding: 2px 0 2px 10px; background-color: #fcfcfc; text-decoration: none; }
+#frameset #searchresult .ajaxSearchResults b, #frameset #searchresult .ajaxSearchResults strong, #frameset #searchresult .ajaxSearchResults a { display: block; background-color: #ddd; color: #333; padding: 5px 10px; margin-top: -1px; border-top: 1px solid rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.03); box-sizing: border-box }
+#frameset #searchresult .ajaxSearchResults a { color: #3697CD; padding: 4px 0 4px 10px; background-color: #fcfcfc; text-decoration: none; }
 #frameset #searchresult .ajaxSearchResults a:hover { color: #333; background-color: #fff; }
 #frameset #searchresult .ajaxSearchResults a .fa { position: relative; float: right; margin: -3px 0; padding: 4px 5px; color: #3d5764 }
 #frameset #searchresult .ajaxSearchResults a.selected { background-color: #0b9991; color: #fff; font-weight: 700; }
-#frameset #searchresult .ajaxSearchResults a .text-danger { color: #F44336; font-weight: 700 }
+#frameset #searchresult .ajaxSearchResults a .text-danger { color: #333; font-weight: 700 }
 /* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
 #topMenu { min-width: 450px; background: url("images/misc/headers.jpg") repeat scroll 0 0 #23393C; }
 #Navcontainer { color: #fff; }
