@@ -231,12 +231,16 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 				rpcNode.innerHTML = typeof response == 'object' ? response.responseText : response;
 				rpcNode.style.display = 'block';
 				rpcNode.loaded = true;
+				
 				var elm = parent.mainMenu.document.getElementById("buildText");
 				if(elm) {
 					elm.innerHTML = "";
 					elm.style.display = 'none';
 				}
-				setActiveFromContextMenu(JSON.parse(localStorage.getItem('MODX_lastClickedElement'))[1]);
+				
+				if(localStorage.getItem('MODX_lastClickedElement')) {
+					setActiveFromContextMenu(JSON.parse(localStorage.getItem('MODX_lastClickedElement'))[1]);
+				}
 
 				// check if bin is full
 				if(rpcNode.id == 'treeRoot') {

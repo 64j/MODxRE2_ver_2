@@ -55,9 +55,9 @@ $useEVOModal = '';
 
 		function showResponse(request) {
 			var counts = request.split(',');
-			var elm = $('msgCounter');
+			var elm = document.getElementById('msgCounter');
 			if(elm) elm.innerHTML = '(' + counts[0] + ' / ' + counts[1] + ')';
-			var elm = $('newMail');
+			var elm = document.getElementById('newMail');
 			if(elm) elm.style.display = counts[0] > 0 ? 'inline' : 'none';
 		}
 
@@ -66,7 +66,7 @@ $useEVOModal = '';
 			updateMail.periodical(<?php echo $modx->config['mail_check_timeperiod'] * 1000 ?>, '', true); // Periodical Updater
 			if(top.__hideTree) {
 				// display toc icon
-				var elm = $('tocText');
+				var elm = document.getElementById('tocText');
 				if(elm) elm.innerHTML = "<a href='#' onclick='document.mainMenu.defaultTreeFrame();'><?php echo $_lang['show_tree']?></a>";
 			}
 		});
@@ -188,13 +188,13 @@ $useEVOModal = '';
 		// GENERAL FUNCTIONS - Work
 		// These functions are used for showing the user the system is working
 		function work() {
-			var elm = $('workText');
+			var elm = document.getElementById('workText');
 			if(elm) elm.innerHTML = '<img src="<?php echo $_style['icons_working']?>" width="16" height="16" />&nbsp;<?php echo $_lang['working']?>';
 			else w = window.setTimeout('work()', 50);
 		}
 
 		function stopWork() {
-			var elm = $('workText');
+			var elm = document.getElementById('workText');
 			if(elm) elm.innerHTML = "";
 			else  ww = window.setTimeout('stopWork()', 50);
 		}
