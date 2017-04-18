@@ -8,6 +8,10 @@ if(!array_key_exists('mail_check_timeperiod', $modx->config) || !is_numeric($mod
 $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
+if(!isset($modx->config['manager_tree_width'])) {
+	$modx->config['manager_tree_width'] = '320';
+}
+
 $useEVOModal = '';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -380,133 +384,98 @@ if(is_array($evtOut)) {
 		stopWork();
 		parent.scrollWork();
 
-		jQuery('#hideMenu', jQuery(parent.document)).click(function() {
-			var pos = 0;
-			if(jQuery('#tree', jQuery(parent.document)).width()) {
-				jQuery(parent.document.body).removeClass('tree-show').addClass('tree-hide');
-			} else {
-				jQuery(parent.document.body).addClass('tree-show').removeClass('tree-hide');
-				pos = 320
+		// resizer
+		var pos = {
+			x: <?php echo $modx->config['manager_tree_width'] ?>
+		};
+
+		if(!localStorage.getItem('MODX_lastPositionSideBar')) {
+			localStorage.setItem('MODX_lastPositionSideBar', <?php echo $modx->config['manager_tree_width'] ?>);
+		}
+
+		jQuery('#resizer .switcher', parent.document).click(function() {
+			if(!localStorage.getItem('MODX_lastPositionSideBar')) {
+				localStorage.setItem('MODX_lastPositionSideBar', <?php echo $modx->config['manager_tree_width'] ?>);
 			}
-			jQuery(parent.document.body).removeClass('resizer-move');
-			jQuery('#tree', jQuery(parent.document)).css({
-				width: pos
+
+			if(jQuery('#main', parent.document).offset().left) {
+				pos.x = 0;
+				jQuery(parent.document.body).addClass('sidebar-closed');
+				localStorage.setItem('MODX_lastPositionSideBar', jQuery('#main', parent.document).offset().left);
+			} else {
+				pos.x = parseInt(localStorage.getItem('MODX_lastPositionSideBar'));
+				if(pos.x == 0) {
+					pos.x = modx.sidebarWidth
+				}
+				jQuery(parent.document.body).removeClass('sidebar-closed');
+				localStorage.setItem('MODX_lastPositionSideBar', 0);
+			}
+
+			jQuery('#tree', parent.document).css({
+				width: pos.x
 			});
-			jQuery('#resizer, #main', jQuery(parent.document)).css({
-				left: pos
+
+			jQuery('#resizer, #main', parent.document).css({
+				left: pos.x
 			});
+
+			parent.document.cookie = 'MODX_positionSideBar=' + pos.x;
 		});
 
-		// resizer
-		jQuery(parent.document).on('mousedown touchstart', '#resizer', function(e) {
-			var pos = {};
-			pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
-
-			jQuery(parent.document.body).addClass('resizer-move');
-
-			jQuery(parent.document).on('mousemove touchmove', function(e) {
+		jQuery('#resizer .handler', parent.document).on('mousedown touchstart', function(e) {
+			if(!jQuery(parent.document.body).hasClass('sidebar-closed')) {
 				pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
 
-				if(parseInt(pos.x) > 0) {
-					jQuery(parent.document.body).addClass('tree-show').removeClass('tree-hide')
-				} else {
-					pos.x = 0;
-					jQuery(parent.document.body).removeClass('tree-show').addClass('resizer-move')
+				jQuery('#frameset', parent.document).append('<div id="resizer_mask"><div>');
+				jQuery('#resizer', parent.document).addClass('hover');
+
+				jQuery(parent.document.body).on('mousemove touchmove', function(e) {
+					pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
+
+					if(parseInt(pos.x) < 100) {
+						pos.x = 100;
+					}
+					
+					console.log(pos.x);
+
+					jQuery('#tree', parent.document).css({
+						width: pos.x
+					});
+					jQuery('#resizer, #main', parent.document).css({
+						left: pos.x
+					})
+				});
+
+				jQuery(parent.document).one('mouseup touchend', function(e) {
+					pos.x = jQuery('#main', parent.document).offset().left
+					jQuery(parent.document).off('mousemove touchmove');
+					jQuery('#resizer', parent.document).removeClass('hover');
+					jQuery('#resizer_mask', parent.document).remove();
+					localStorage.setItem('MODX_lastPositionSideBar', pos.x);
+					parent.document.cookie = 'MODX_positionSideBar=' + pos.x;
+				})
+			} else {
+				pos.x = parseInt(localStorage.getItem('MODX_lastPositionSideBar'));
+				if(pos.x == 0) {
+					pos.x = <?php echo $modx->config['manager_tree_width'] ?>
 				}
 
-				jQuery('#tree', jQuery(parent.document)).css({
+				jQuery(parent.document.body).removeClass('sidebar-closed');
+				localStorage.setItem('MODX_lastPositionSideBar', 0);
+
+				jQuery('#tree', parent.document).css({
 					width: pos.x
 				});
-				jQuery('#resizer, #main', jQuery(parent.document)).css({
+				jQuery('#resizer, #main', parent.document).css({
 					left: pos.x
 				});
-			});
-
-			jQuery(parent.document).one('mouseup touchend', function(e) {
-				if(typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length) {
-					pos.x = e.originalEvent.touches[0].clientX
-				} else if(typeof e.originalEvent.changedTouches != 'undefined' && e.originalEvent.changedTouches.length) {
-					pos.x = e.originalEvent.changedTouches[0].clientX
-				} else {
-					pos.x = e.clientX
-				}
-
-				jQuery(parent.document).off('mousemove touchmove');
-				if(parseInt(pos.x) > 0) {
-					jQuery(parent.document.body).removeClass('resizer-move').addClass('tree-show').removeClass('tree-hide')
-				} else {
-					jQuery(parent.document.body).removeClass('resizer-move').removeClass('tree-show').addClass('tree-hide')
-				}
-			});
+				parent.document.cookie = 'MODX_positionSideBar=' + pos.x;
+			}
 
 		});
 
 		// dropdown mainMenu
-
 		var dropdown = jQuery(parent.document).find('.dropdown');
-
-		// Event click
-//		jQuery('.dropdown-toggle').click(function() {
-//			var $this = jQuery(this);
-//			var el = $this.parent().find('.dropdown-menu');
-//			var dropdown_menu = el.clone();
-//			var dropdown_index = el.index('.dropdown-menu');
-//			var timer = false;
-//
-//			jQuery('a', dropdown_menu).each(function(index, element) {
-//				if(jQuery(element).attr('onclick')) {
-//					jQuery(element).attr('onclick', jQuery(element).attr('onclick').search('setLastClickedElement') == 0 ? 'document.mainMenu.' + jQuery(element).attr('onclick') : jQuery(element).attr('onclick'))
-//				}
-//			});
-//
-//			jQuery('a', dropdown_menu).click(function() {
-//				dropdown.removeClass('show');
-//				jQuery('#nav li').removeClass('active');
-//				el.parent('li').addClass('active')
-//			});
-//
-//			if(jQuery(this).offset().left > jQuery(window).width() / 2) {
-//				dropdown_menu.css({
-//					left: 'auto',
-//					right: jQuery(window).width() - (jQuery(this).offset().left + jQuery(this).outerWidth()) + 'px'
-//				})
-//			} else {
-//				dropdown_menu.css({
-//					left: jQuery(this).offset().left + 'px',
-//					right: 'auto'
-//				})
-//			}
-//
-//			if(dropdown.data('index') != dropdown_index) {
-//				dropdown.removeClass('show');
-//				dropdown.html(dropdown_menu).addClass('show').data('index', dropdown_index)
-//			} else {
-//				dropdown.toggleClass('show')
-//			}
-//
-//			dropdown.hover(function() {
-//			}, function() {
-//				dropdown.removeClass('show');
-//				$this.removeClass('hover');
-//			});
-//
-//			$this.hover(function() {
-//			}, function() {
-//				var $this = jQuery(this);
-//				dropdown.removeClass('show');
-//				$this.removeClass('hover');
-//
-//				dropdown.hover(function() {
-//					dropdown.addClass('show');
-//					jQuery('.dropdown-menu').eq(dropdown.data('index')).parent().find('.dropdown-toggle').addClass('hover')
-//				}, function() {
-//					dropdown.removeClass('show');
-//					$this.removeClass('hover')
-//				});
-//			})
-//
-//		});
-		// Event
 
 		// Event hover
 		jQuery('.dropdown-toggle').hover(function() {
@@ -559,8 +528,7 @@ if(is_array($evtOut)) {
 			});
 		});
 		// Event
-
-
+		
 		// modx Search
 		var searchresult = jQuery(parent.document).find('#searchresult');
 		var searchresultWidth = 400/*(jQuery(this).outerWidth() - jQuery('#searchform').offset().left)*/;
