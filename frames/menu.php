@@ -385,7 +385,6 @@ if(is_array($evtOut)) {
 	jQuery(function() {
 
 		stopWork();
-		parent.scrollWork();
 
 		// resizer
 		var pos = {
