@@ -6,7 +6,7 @@
 html, body, form, fieldset, img { margin: 0; padding: 0; }
 img { border: none; }
 html { font-size: 100.01%; line-height: 1.5; color: #333; }
-body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; height: 100%; color: #333; background: #eeeeee; font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important; }
+body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; height: 100%; color: #333; background: #eeeeee; }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
 /* For Chinese Font */
@@ -65,7 +65,6 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 .messageUnread { color: #3CB371; font-weight: 500; }
 .right { font-weight: 500; color: #333; float: left; padding: 0 20px 20px; }
 .rtl .right { float: right; }
-.gridster > * { -webkit-transition: height .4s, width .4s !important; -moz-transition: height .4s !important; -o-transition: height .4s !important; -ms-transition: height .4s !important; transition: height .4s !important; }
 /* frameSet*/
 .resizer-move::before { position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 900; background-color: transparent; content: "" }
 #mainMenu, #tree, #main { position: absolute; }
@@ -74,12 +73,12 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 #mainMenu iframe { height: 48px }
 #tree { width: 320px; top: 48px; left: 0; bottom: 0; overflow: hidden; }
 #main { top: 48px; left: 320px; right: 0; bottom: 0; }
-/*resizer*/
-#resizer { position: absolute; z-index: 99; top: 48px; bottom: 0; left: 320px; width: 8px; margin-left: -1px; cursor: col-resize; background-color: transparent; transition: background-color .3s }
-#resizer:hover { background-color: #e0e0e0; }
-#resizer #hideMenu { position: absolute; left: -8px; top: 0; width: 16px; height: 40px; line-height: 35px; text-align: center; font-size: 30px; cursor: pointer; }
-.sidebar-closed #resizer #hideMenu { left: 0 }
-.sidebar-closed #resizer #hideMenu .fa::before { content: "\f105"; }
+#resizer { position: absolute; top: 48px; bottom: 0; left: 320px; width: 12px; cursor: col-resize; z-index: 999 }
+.resizer-move #resizer::before, .tree-hide #resizer::before { position: absolute; left: 0; top: 0; bottom: 0; width: 5px; content: ""; background-color: #444 }
+#resizer #hideMenu { position: absolute; z-index: 9; left: -12px; top: 5px; width: 24px; height: 24px; line-height: 24px; font-size: 20px; text-align: right; text-indent: -2px; cursor: pointer; content: "\f054" }
+.tree-show #resizer #hideMenu { text-align: center }
+.tree-show #resizer #hideMenu i::before { content: "\f053" }
+#resizer2 #hideTopMenu { display: block; margin-top: -4px; margin-left: 0px; cursor: pointer; width: 16px; height: 16px; }
 /* -------------------------[ Topbar ]--- */
 .dropdown-menu { display: none }
 #topbar, #tocText { margin: 0; color: #333; padding: 0 5px; float: left; width: 10px; white-space: nowrap; line-height: 48px; }
@@ -189,9 +188,9 @@ div.treeframebody { background: #f5f5f5 url(images/subnav.jpg) !important; -webk
 #floater td { padding: 0 !important; }
 #floater input, #floater select { box-sizing: border-box; width: 150px; margin-bottom: 5px; }
 .rtl #floater { right: 4px }
-.rootNode, .treeNode, .treeNodeHover, .treeNodeSelected, .emptyNode { color: #000; cursor: pointer; width: auto; border: 1px solid transparent; padding: 1px 2px; margin-right: 2px; }
+.rootNode, .treeNode, .treeNodeHover, .treeNodeSelected, .emptyNode { color: #000; cursor: pointer; width: auto; margin-right: 2px; }
 div.treeNode { white-space: nowrap; }
-.treeNodeSelected, .treeNodeHover { background-color: #FFFFFF; border: 1px solid #CCC; color: #000; }
+.treeNodeSelected, .treeNodeHover { background-color: #FFFFFF; border: 1px solid #CCC; color: #000; padding: 1px 2px; margin-left: -3px; }
 .treeNodeSelected { font-weight: 700; }
 .unpublished a, .unpublishedNode, .unpublish { color: #B68282; font-style: italic; }
 .deletedNode, .deleted { color: #A52A2A; text-decoration: line-through; }
@@ -243,7 +242,6 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .cntxMnuItem img, .cntxMnuItemDisabled img { }
 .cntxMnuSeparator { font-size: 0; height: 1px; background-color: #D8D8D8; overflow: hidden; margin: 3px 0; }
 .rtl .cntxMnuSeparator { margin: 3px 28px 3px 1px; }
-#frameset { overflow: hidden; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
 #frameset .dropdown { display: block; position: absolute; z-index: 1001; left: auto; top: 48px; right: auto; min-width: 200px; background-color: #fff; border-radius: 0; box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); opacity: 0; visibility: hidden; overflow: auto; max-height: 400px; max-height: calc(100% - 48px); transition: opacity 0.3s, visibility 0.1s }
 #frameset .show.dropdown { opacity: 1; visibility: visible }
 #frameset .dropdown-menu { display: block; margin: 0; padding: 0px; overflow: hidden; }
@@ -255,15 +253,6 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 #frameset .dropdown-menu a .fa { margin-right: 10px; color: #39545e; width: 15px; text-align: center; }
 #frameset .dropdown-menu span { text-align: center; font-size: 11px; color: #999; }
 #frameset .dropdown #searchresult { display: block !important }
-#frameset #searchresult { position: absolute; z-index: 98; overflow: auto; top: 48px; right: 0; bottom: 0; width: 0; margin-right: -100%; transition: margin-right 0.3s; transition-delay: 0.3s; background-color: #fcfcfc; box-shadow: 0 0 60px rgba(0, 0, 0, 0.15); border-left: 1px solid rgba(0, 0, 0, 0.1); box-sizing: border-box; }
-#frameset #searchresult.open { margin-right: 0 !important }
-#frameset #searchresult .ajaxSearchResults ul, #frameset #searchresult .ajaxSearchResults li { margin: 0; padding: 0; list-style: none }
-#frameset #searchresult .ajaxSearchResults b, #frameset #searchresult .ajaxSearchResults strong, #frameset #searchresult .ajaxSearchResults a { display: block; background-color: #ddd; color: #333; padding: 5px 10px; margin-top: -1px; border-top: 1px solid rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.03); box-sizing: border-box }
-#frameset #searchresult .ajaxSearchResults a { color: #3697CD; padding: 4px 0 4px 10px; background-color: #fcfcfc; text-decoration: none; }
-#frameset #searchresult .ajaxSearchResults a:hover { color: #333; background-color: #fff; }
-#frameset #searchresult .ajaxSearchResults a .fa { position: relative; float: right; margin: -3px 0; padding: 4px 5px; color: #3d5764 }
-#frameset #searchresult .ajaxSearchResults a.selected { background-color: #0b9991; color: #fff; font-weight: 700; }
-#frameset #searchresult .ajaxSearchResults a .text-danger { color: #333; font-weight: 700 }
 /* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
 #topMenu { min-width: 450px; background: url("images/misc/headers.jpg") repeat scroll 0 0 #23393C; }
 #Navcontainer { color: #fff; }
@@ -520,7 +509,7 @@ form input[type="text"], form input[type="password"], form input[type="number"],
 #helpPane li > strong { display: block; font-size: 14px; }
 #helpPane pre { font-size: 12px; border: 1px solid #888; border-radius: 5px; background-color: #fff; padding: 1em; margin: 10px 0; }
 /* Top nav search form */
-#searchform { position: relative; float: right; padding: 9px 0px; height: 30px; }
+#searchform { float: right; padding: 9px 0px; }
 @media (max-width: 959px) {
 #nav > li > a > .fa { margin-right: 0; line-height: 40px; font-size: 17px; }
 #nav > li > a { font-size: 0px; }
@@ -535,7 +524,6 @@ div.username { display: none !important; }
   -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3) inset;
   */ -moz-transition-duration: 0.2s; -webkit-transition-duration: 0.2s; transition-duration: 0.2s; }
 #searchform input[type=text]:focus { width: 250px; /*border-color: rgba(255,255,255,0.5);*/ background: rgba(0, 0, 0, 0.2); text-align: left; }
-#searchform .fa-refresh { position: absolute; top: 17px; right: 12px; color: #e0e0e0; }
 /*
  * MODxRE2 styles
  * css above is original MODxRE
@@ -693,7 +681,7 @@ input[type="email"]:focus, input[type="password"]:focus, input[type="search"]:fo
 .treeButton .fa, .treeButton .fa-lg, #mx_contextmenu .menuLink .fa, #mx_contextmenu .menuLink .fa-lg { font-size: 14px; }
 #mx_contextmenu img { display: none; }
 /* tree */
-.treeNodeSelected, .treeNodeHover { background-color: rgba(54, 151, 205, 0.2); border: 1px solid #3697CD; color: #3697CD; }
+.treeNodeSelected, .treeNodeHover { background-color: rgba(54, 151, 205, 0.2); border: 1px solid #3697CD; color: #3697CD; padding: 1px 1px; margin-left: -2px; }
 /* dashboard */
 .dashboard .wm_logo { margin-top: 15px; margin-bottom: 10px; margin-left: 10px; margin-right: 15px; }
 .dashboard .wm_logo img { height: 56px; }

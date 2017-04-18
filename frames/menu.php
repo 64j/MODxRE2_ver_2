@@ -7,12 +7,6 @@ if(!array_key_exists('mail_check_timeperiod', $modx->config) || !is_numeric($mod
 }
 $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
-
-if(!isset($modx->config['manager_tree_width'])) {
-	$modx->config['manager_tree_width'] = '320';
-}
-
-$useEVOModal = '';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"'; ?>>
@@ -55,9 +49,9 @@ $useEVOModal = '';
 
 		function showResponse(request) {
 			var counts = request.split(',');
-			var elm = document.getElementById('msgCounter');
+			var elm = $('msgCounter');
 			if(elm) elm.innerHTML = '(' + counts[0] + ' / ' + counts[1] + ')';
-			var elm = document.getElementById('newMail');
+			var elm = $('newMail');
 			if(elm) elm.style.display = counts[0] > 0 ? 'inline' : 'none';
 		}
 
@@ -66,28 +60,25 @@ $useEVOModal = '';
 			updateMail.periodical(<?php echo $modx->config['mail_check_timeperiod'] * 1000 ?>, '', true); // Periodical Updater
 			if(top.__hideTree) {
 				// display toc icon
-				var elm = document.getElementById('tocText');
+				var elm = $('tocText');
 				if(elm) elm.innerHTML = "<a href='#' onclick='document.mainMenu.defaultTreeFrame();'><?php echo $_lang['show_tree']?></a>";
 			}
 		});
 
 
 		function setTreeFrameWidth(pos) {
-			if(pos > 0) {
-				parent.document.getElementById('frameset').className = 'sidebar-opened';
-				localStorage.setItem('MODX_lastPositionSideBar', 0);
-			} else {
-				parent.document.getElementById('frameset').className = 'sidebar-closed';
-				localStorage.setItem('MODX_lastPositionSideBar', parseInt(parent.document.getElementById('tree').offsetWidth));
-			}
-			parent.document.cookie = 'MODX_positionSideBar=' + pos;
 			parent.document.getElementById('tree').style.width = pos + 'px';
 			parent.document.getElementById('resizer').style.left = pos + 'px';
 			parent.document.getElementById('main').style.left = pos + 'px';
+			if(pos > 0) {
+				parent.document.getElementById('frameset').classList.add('tree-show');
+			} else {
+				parent.document.getElementById('frameset').classList.remove('tree-show');
+			}
 		}
 
 		function toggleTreeFrame() {
-			var pos = parseInt(parent.document.getElementById('tree').offsetWidth) != 0 ? 0 : (localStorage.getItem('MODX_lastPositionSideBar') ? parseInt(localStorage.getItem('MODX_lastPositionSideBar')) : 320);
+			var pos = parseInt(parent.document.getElementById('tree').style.width) != 0 ? 0 : 320;
 			setTreeFrameWidth(pos);
 		}
 
@@ -149,7 +140,7 @@ $useEVOModal = '';
 		// GENERAL FUNCTIONS - Refresh
 		// These functions are used for refreshing the tree or menu
 		function reloadtree() {
-			var elm = document.getElementById("buildText");
+			var elm = $('buildText');
 			if(elm) {
 				elm.innerHTML = '<img src="<?php echo $_style['icons_loading_doc_tree']?>" width="16" height="16" />&nbsp;<?php echo $_lang['loading_doc_tree']?>';
 				elm.style.display = 'block';
@@ -160,7 +151,7 @@ $useEVOModal = '';
 
 		function reloadmenu() {
 			<?php if($manager_layout == 0) { ?>
-			var elm = document.getElementById("buildText");
+			var elm = $('buildText');
 			if(elm) {
 				elm.innerHTML = '<img src="<?php echo $_style['icons_working']?>" width="16" height="16" />&nbsp;<?php echo $_lang['loading_menu']?>';
 				elm.style.display = 'block';
@@ -188,13 +179,13 @@ $useEVOModal = '';
 		// GENERAL FUNCTIONS - Work
 		// These functions are used for showing the user the system is working
 		function work() {
-			var elm = document.getElementById('workText');
+			var elm = $('workText');
 			if(elm) elm.innerHTML = '<img src="<?php echo $_style['icons_working']?>" width="16" height="16" />&nbsp;<?php echo $_lang['working']?>';
 			else w = window.setTimeout('work()', 50);
 		}
 
 		function stopWork() {
-			var elm = document.getElementById('workText');
+			var elm = $('workText');
 			if(elm) elm.innerHTML = "";
 			else  ww = window.setTimeout('stopWork()', 50);
 		}
@@ -236,24 +227,6 @@ $useEVOModal = '';
 
 		function setLastClickedElement(type, id) {
 			localStorage.setItem('MODX_lastClickedElement', '[' + type + ',' + id + ']');
-		}
-
-		function modxOpenWindow(data) {
-			if(typeof data == 'object') {
-				if(data.width == undefined)
-					data.width = parent.window.outerWidth * 0.9;
-				if(data.height == undefined)
-					data.height = parent.window.outerHeight * 0.8;
-				if(data.left == undefined)
-					data.left = parent.window.outerWidth * 0.05;
-				if(data.top == undefined)
-					data.top = parent.window.outerHeight * 0.1;
-				if(data.title == undefined)
-					data.title = Math.floor((Math.random() * 999999) + 1);
-				if(data.url !== undefined)
-					window.open(data.url, data.title, 'width=' + data.width + ',height=' + data.height + ',top=' + data.top + ',left=' + data.left + ',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no');
-				return false;
-			}
 		}
 	</script>
 </head>
@@ -330,39 +303,39 @@ if(is_array($evtOut)) {
 			<ul class="dropdown-menu">
 				<?php if($modx->hasPermission('settings')) { ?>
 					<li>
-						<a href="index.php?a=17" target="main" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-cog fw"></i><?php echo $_lang['edit_settings'] ?>
+						<a href="index.php?a=17" target="main" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-cog fw"></i><?php echo $_lang['edit_settings'] ?>
 						</a>
 					</li>
 				<?php } ?>
 
 				<?php if($modx->hasPermission('view_eventlog')) { ?>
 					<li>
-						<a href="index.php?a=70" target="main" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-calendar"></i><?php echo $_lang['site_schedule'] ?>
+						<a href="index.php?a=70" target="main" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-calendar"></i><?php echo $_lang['site_schedule'] ?>
 						</a>
 					</li>
 				<?php } ?>
 
 				<?php if($modx->hasPermission('view_eventlog')) { ?>
 					<li>
-						<a href="index.php?a=114" target="main" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-exclamation-triangle"></i><?php echo $_lang['eventlog_viewer'] ?>
+						<a href="index.php?a=114" target="main" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-exclamation-triangle"></i><?php echo $_lang['eventlog_viewer'] ?>
 						</a>
 					</li>
 				<?php } ?>
 
 				<?php if($modx->hasPermission('logs')) { ?>
 					<li>
-						<a href="index.php?a=13" target="main" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-user-secret"></i><?php echo $_lang['view_logging'] ?>
+						<a href="index.php?a=13" target="main" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-user-secret"></i><?php echo $_lang['view_logging'] ?>
 						</a>
 					</li>
 					<li>
-						<a href="index.php?a=53" target="main" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-info-circle"></i><?php echo $_lang['view_sysinfo'] ?>
+						<a href="index.php?a=53" target="main" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-info-circle"></i><?php echo $_lang['view_sysinfo'] ?>
 						</a>
 					</li>
 				<?php } ?>
 
 				<?php if($modx->hasPermission('help')) { ?>
 					<li>
-						<a href="index.php?a=9#version_notices" target="main" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-question-circle"></i><?php echo $_lang['help'] ?>
+						<a href="index.php?a=9#version_notices" target="main" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-question-circle"></i><?php echo $_lang['help'] ?>
 						</a>
 					</li>
 				<?php } ?>
@@ -370,14 +343,14 @@ if(is_array($evtOut)) {
 			</ul>
 		</li>
 		<li>
-			<a href="../" target="_blank" title="<?php echo $_lang['preview'] ?>" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-home"></i></a>
+			<a href="../" target="_blank" title="<?php echo $_lang['preview'] ?>" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-home"></i></a>
 		</li>
 	</ul>
 </div>
 <div id="searchform">
 	<form action="index.php?a=71#results" method="post" target="main">
 		<input type="hidden" value="Search" name="submitok" />
-		<input type="text" name="searchid" size="25" class="form-control input-sm" autocomplete="off" placeholder="<?php echo $_lang['search'] ?>">
+		<input type="text" name="searchid" size="25" class="form-control input-sm" placeholder="<?php echo $_lang['search'] ?>">
 	</form>
 </div>
 <div id="menuSplitter"></div>
@@ -385,14 +358,135 @@ if(is_array($evtOut)) {
 	jQuery(function() {
 
 		stopWork();
+		parent.scrollWork();
+
+		jQuery('#hideMenu', jQuery(parent.document)).click(function() {
+			var pos = 0;
+			if(jQuery('#tree', jQuery(parent.document)).width()) {
+				jQuery(parent.document.body).removeClass('tree-show').addClass('tree-hide');
+			} else {
+				jQuery(parent.document.body).addClass('tree-show').removeClass('tree-hide');
+				pos = 320
+			}
+			jQuery(parent.document.body).removeClass('resizer-move');
+			jQuery('#tree', jQuery(parent.document)).css({
+				width: pos
+			});
+			jQuery('#resizer, #main', jQuery(parent.document)).css({
+				left: pos
+			});
+		});
 
 		// resizer
-		var pos = {
-			x: <?php echo $modx->config['manager_tree_width'] ?>
-		};
+		jQuery(parent.document).on('mousedown touchstart', '#resizer', function(e) {
+			var pos = {};
+			pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
+
+			jQuery(parent.document.body).addClass('resizer-move');
+
+			jQuery(parent.document).on('mousemove touchmove', function(e) {
+				pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
+
+				if(parseInt(pos.x) > 0) {
+					jQuery(parent.document.body).addClass('tree-show').removeClass('tree-hide')
+				} else {
+					pos.x = 0;
+					jQuery(parent.document.body).removeClass('tree-show').addClass('resizer-move')
+				}
+
+				jQuery('#tree', jQuery(parent.document)).css({
+					width: pos.x
+				});
+				jQuery('#resizer, #main', jQuery(parent.document)).css({
+					left: pos.x
+				});
+			});
+
+			jQuery(parent.document).one('mouseup touchend', function(e) {
+				if(typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length) {
+					pos.x = e.originalEvent.touches[0].clientX
+				} else if(typeof e.originalEvent.changedTouches != 'undefined' && e.originalEvent.changedTouches.length) {
+					pos.x = e.originalEvent.changedTouches[0].clientX
+				} else {
+					pos.x = e.clientX
+				}
+
+				jQuery(parent.document).off('mousemove touchmove');
+				if(parseInt(pos.x) > 0) {
+					jQuery(parent.document.body).removeClass('resizer-move').addClass('tree-show').removeClass('tree-hide')
+				} else {
+					jQuery(parent.document.body).removeClass('resizer-move').removeClass('tree-show').addClass('tree-hide')
+				}
+			});
+
+		});
 
 		// dropdown mainMenu
+
 		var dropdown = jQuery(parent.document).find('.dropdown');
+
+		// Event click
+//		jQuery('.dropdown-toggle').click(function() {
+//			var $this = jQuery(this);
+//			var el = $this.parent().find('.dropdown-menu');
+//			var dropdown_menu = el.clone();
+//			var dropdown_index = el.index('.dropdown-menu');
+//			var timer = false;
+//			
+//			jQuery('a', dropdown_menu).each(function(index, element) {
+//				if(jQuery(element).attr('onclick')) {
+//					jQuery(element).attr('onclick', jQuery(element).attr('onclick').search('setLastClickedElement') == 0 ? 'document.mainMenu.' + jQuery(element).attr('onclick') : jQuery(element).attr('onclick'))
+//				}
+//			});			
+//
+//			jQuery('a', dropdown_menu).click(function() {
+//				dropdown.removeClass('show');
+//				jQuery('#nav li').removeClass('active');
+//				el.parent('li').addClass('active')
+//			});
+//
+//			if(jQuery(this).offset().left > jQuery(window).width() / 2) {
+//				dropdown_menu.css({
+//					left: 'auto',
+//					right: jQuery(window).width() - (jQuery(this).offset().left + jQuery(this).outerWidth()) + 'px'
+//				})
+//			} else {
+//				dropdown_menu.css({
+//					left: jQuery(this).offset().left + 'px',
+//					right: 'auto'
+//				})
+//			}
+//			
+//			if(dropdown.data('index') != dropdown_index) {
+//				dropdown.removeClass('show');
+//				dropdown.html(dropdown_menu).addClass('show').data('index', dropdown_index)
+//			} else {
+//				dropdown.toggleClass('show')
+//			}
+//
+//			dropdown.hover(function() {
+//			}, function() {
+//				dropdown.removeClass('show');
+//				$this.removeClass('hover');
+//			});
+//			
+//			$this.hover(function() {
+//			}, function() {
+//				var $this = jQuery(this);
+//				dropdown.removeClass('show');
+//				$this.removeClass('hover');
+//				
+//				dropdown.hover(function() {
+//					dropdown.addClass('show');
+//					jQuery('.dropdown-menu').eq(dropdown.data('index')).parent().find('.dropdown-toggle').addClass('hover')
+//				}, function() {
+//					dropdown.removeClass('show');
+//					$this.removeClass('hover')
+//				});
+//			})
+//																		
+//		});
+		// Event
 
 		// Event hover
 		jQuery('.dropdown-toggle').hover(function() {
@@ -403,14 +497,14 @@ if(is_array($evtOut)) {
 
 			jQuery('a', dropdown_menu).each(function(index, element) {
 				if(jQuery(element).attr('onclick')) {
-					jQuery(element).attr('onclick', jQuery(element).attr('onclick').search('setLastClickedElement') == 0 ? 'top.mainMenu.' + jQuery(element).attr('onclick') : jQuery(element).attr('onclick'))
+					jQuery(element).attr('onclick', jQuery(element).attr('onclick').search('setLastClickedElement') == 0 ? 'document.mainMenu.' + jQuery(element).attr('onclick') : jQuery(element).attr('onclick'))
 				}
 			});
 
 			jQuery('a', dropdown_menu).click(function() {
 				dropdown.removeClass('show');
 				jQuery('#nav li, #supplementalNav li').removeClass('active');
-				el.parent('li').addClass('active');
+				el.parent('li').addClass('active')
 			});
 
 			if(jQuery(this).offset().left > jQuery(window).width() / 2) {
@@ -446,29 +540,24 @@ if(is_array($evtOut)) {
 		});
 		// Event
 
-		// modx Search
-		var searchresult = jQuery(parent.document).find('#searchresult');
-		var searchresultWidth = 400/*(jQuery(this).outerWidth() - jQuery('#searchform').offset().left)*/;
-
-		searchresult.css({
-			'width': searchresultWidth + 'px',
-			'margin-right': -searchresultWidth - 50 + 'px'
-		});
-
-		var modalParams = {
-			width: parseInt(parent.window.outerWidth * 0.9),
-			height: parseInt(parent.window.outerHeight * 0.8),
-			left: parseInt(parent.window.outerWidth * 0.05),
-			top: parseInt(parent.window.outerHeight * 0.1)
-		};
-
 		jQuery('#searchform input').on('keyup', function(e) {
-			var self = this;
 			e.preventDefault();
-			jQuery(this).next('.fa').remove();
+			var searchresult;
 
-			if(this.value.length !== '' && this.value.length > 2) {
-				var url = 'index.php?a=71&ajax=1';
+			if(!jQuery('#searchresult').length) {
+				searchresult = jQuery('<div id="searchresult" style="display: none"></div>');
+				jQuery(this).parent().append(searchresult);
+			} else {
+				searchresult = jQuery('#searchresult')
+			}
+
+			dropdown.css({
+				left: 'auto',
+				right: jQuery(window).width() - (jQuery(this).parent().offset().left + jQuery(this).parent().outerWidth()) + 'px'
+			});
+
+			if(jQuery(this).val() !== '') {
+				var url = 'index.php?a=71';
 				var params = {
 					searchid: jQuery(this).val(),
 					submitok: 'Search'
@@ -477,26 +566,20 @@ if(is_array($evtOut)) {
 					url: url,
 					data: params,
 					method: 'post',
-					beforeSend: function() {
-						jQuery(self).after('<i class="fa fa-refresh fa-spin fa-fw"></i>');
-					},
 					dataFilter: function(data) {
-						data = jQuery(data).find('.ajaxSearchResults');
+						data = jQuery(data).find('.sortabletable');
 						jQuery('a', data).each(function(i, el) {
-							jQuery(el).attr('target', 'main').append('<span onclick="<?php echo($useEVOModal ? 'top.EVO.modal.show' : 'top.mainMenu.modxOpenWindow') ?>({title:\'' + el.innerText + '\',id:\'' + el.id + '\',url:\'' + el.href + '\',width:\'' + modalParams.width + 'px\',height:\'' + modalParams.height + 'px\',left:\'' + modalParams.left + 'px\',top:\'' + modalParams.top + 'px\'});return false;"><?php echo $_style['icons_external_link']?></span>');
+							jQuery(el).attr('target', 'main')
 						});
-						return data.length ? data.html() : '';
+						return data;
 					},
 					success: function(data) {
-						jQuery(self).next('.fa').fadeOut();
-						if(data) {
-							searchresult.html('<div class="ajaxSearchResults">' + data + '</div>').addClass('open');
-							jQuery('a', searchresult).click(function() {
-								jQuery('.selected', searchresult).removeClass('selected');
-								jQuery(this).addClass('selected')
-							})
+						if(data.length) {
+							searchresult.html(data);
+
+							dropdown.html(searchresult.clone()).addClass('show')
 						} else {
-							searchresult.removeClass('open').empty()
+							dropdown.removeClass('show').empty()
 						}
 					},
 					error: function(xhr, ajaxOptions, thrownError) {
@@ -505,39 +588,22 @@ if(is_array($evtOut)) {
 				})
 
 			} else {
-				searchresult.removeClass('open').empty()
+				dropdown.removeClass('show').empty()
 			}
-		}).on('focus', function() {
-			if(jQuery('.ajaxSearchResults', searchresult).length) {
-				searchresult.addClass('open')
+			dropdown.hover(function() {
+			}, function() {
+				dropdown.removeClass('show');
+			})
+		}).on('click', function() {
+			dropdown.css({
+				left: 'auto',
+				right: jQuery(window).width() - (jQuery(this).parent().offset().left + jQuery(this).parent().outerWidth()) + 'px'
+			});
+			if(jQuery('#searchresult').length) {
+				dropdown.html(jQuery('#searchresult').clone());
+				dropdown.addClass('show')
 			}
-		}).on('blur', function() {
-			setTimeout(function() {
-				if(!searchresult.is(':hover')) {
-					searchresult.removeClass('open')
-				}
-			}, 300)
-		});
-
-		jQuery('#searchform').hover(function() {
-			if(jQuery('.ajaxSearchResults', searchresult).length) {
-				searchresult.addClass('open')
-			}
-		}, function() {
-			setTimeout(function() {
-				if(!searchresult.is(':hover')) {
-					searchresult.removeClass('open')
-				}
-			}, 300)
-		});
-
-		searchresult.hover(function() {
-			jQuery(this).addClass('open')
-		}, function() {
-			jQuery(this).removeClass('open')
-		});
-
-		// end modx Search
+		})
 
 	});
 </script>
