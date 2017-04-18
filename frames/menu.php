@@ -374,7 +374,7 @@ if(is_array($evtOut)) {
 <div id="searchform">
 	<form action="index.php?a=71#results" method="post" target="main">
 		<input type="hidden" value="Search" name="submitok" />
-		<input type="text" name="searchid" size="25" class="form-control input-sm" placeholder="<?php echo $_lang['search'] ?>">
+		<input type="text" name="searchid" size="25" class="form-control input-sm" autocomplete="off" placeholder="<?php echo $_lang['search'] ?>">
 	</form>
 </div>
 <div id="menuSplitter"></div>
